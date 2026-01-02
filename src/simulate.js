@@ -14,6 +14,12 @@ function simulateFinancing(input) {
     const numParcelasConstrutora = Number(input.numParcelasConstrutora) || 0;
     const taxaInccMensal = Number(input.taxaInccMensalPercentual) || 0;
     const taxaIncc = taxaInccMensal / 100;
+    const mesesSeguroObra = Number(input.mesesSeguroObraCrescendo) || 0;
+    const parcelaCaixaBase = Number(input.parcelaCaixaBase) || 0;
+
+    const incrementoSeguroObra =
+        mesesSeguroObra > 0 ? parcelaCaixaBase / mesesSeguroObra : 0;
+
 
 
     const entradaCalculada = precoVenda - financiamentoSubsidio;
@@ -58,6 +64,11 @@ function simulateFinancing(input) {
             parcelasRestantes > 0 ? saldoDevedor / parcelasRestantes : saldoDevedor;
 
         saldoDevedor -= parcelaAtual;
+        let seguroObraMes = 0;
+
+        if (mes <= mesesSeguroObra) {
+            seguroObraMes = incrementoSeguroObra * mes;
+        }
 
         detalhes.push({
             Mes: mes,
@@ -66,17 +77,20 @@ function simulateFinancing(input) {
             "Parcela ITBI/Cartorio (Base)": 0,
             "INCC (Correção Saldo)": correcaoIncc,
             "Parcela Construtora (Com INCC)": parcelaAtual,
-            "Seguro de Obra": 0,
+            "Seguro de Obra": seguroObraMes,
             Anuais: 0,
             Chave: 0,
             "Parcela Caixa": 0,
             Condominio: 0,
-            "Total Mes": parcelaAtual,
+            "Total Mes": parcelaAtual + seguroObraMes,
             "Valor Investimento Antes": 0,
             "Rendimento Investimento": 0,
             "Valor Sacado Investimento": 0,
             "Valor Investimento Depois": 0,
-            Observacao: "Parcela construtora (saldo dinâmico)"
+            Observacao:
+                mes <= mesesSeguroObra
+                    ? "Parcela construtora com INCC + Seguro de Obra"
+                    : "Parcela construtora com INCC"
         });
     }
 
