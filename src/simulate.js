@@ -7,6 +7,8 @@
  * @param {import("./domain/types").FinancingInput} input
  */
 function simulateFinancing(input) {
+    const taxaCondominioMensal = Number(input.taxaCondominioMensal) || 0;
+
     const precoVenda = Number(input.precoVenda) || 0;
     const financiamentoSubsidio = Number(input.financiamentoSubsidio) || 0;
     const valorAto = Number(input.valorAto) || 0;
@@ -69,6 +71,13 @@ function simulateFinancing(input) {
         if (mes <= mesesSeguroObra) {
             seguroObraMes = incrementoSeguroObra * mes;
         }
+        let parcelaCaixaMes = 0;
+        let condominioMes = 0;
+
+        if (mes > mesesSeguroObra) {
+            parcelaCaixaMes = parcelaCaixaBase;
+            condominioMes = taxaCondominioMensal;
+        }
 
         detalhes.push({
             Mes: mes,
@@ -80,17 +89,17 @@ function simulateFinancing(input) {
             "Seguro de Obra": seguroObraMes,
             Anuais: 0,
             Chave: 0,
-            "Parcela Caixa": 0,
-            Condominio: 0,
-            "Total Mes": parcelaAtual + seguroObraMes,
+            "Parcela Caixa": parcelaCaixaMes,
+            Condominio: condominioMes,
+            "Total Mes": parcelaAtual + seguroObraMes + parcelaCaixaMes + condominioMes,
             "Valor Investimento Antes": 0,
             "Rendimento Investimento": 0,
             "Valor Sacado Investimento": 0,
             "Valor Investimento Depois": 0,
             Observacao:
                 mes <= mesesSeguroObra
-                    ? "Parcela construtora com INCC + Seguro de Obra"
-                    : "Parcela construtora com INCC"
+                    ? "Obra (Construtora + INCC + Seguro)"
+                    : "Pós-obra (Construtora + Caixa + Condomínio)"
         });
     }
 
