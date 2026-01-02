@@ -12,6 +12,9 @@ function simulateFinancing(input) {
     const valorAto = Number(input.valorAto) || 0;
     const aberturaConta = Number(input.aberturaConta) || 0;
     const numParcelasConstrutora = Number(input.numParcelasConstrutora) || 0;
+    const taxaInccMensal = Number(input.taxaInccMensalPercentual) || 0;
+    const taxaIncc = taxaInccMensal / 100;
+
 
     const entradaCalculada = precoVenda - financiamentoSubsidio;
     const saldoBaseImovel = entradaCalculada - valorAto;
@@ -47,6 +50,9 @@ function simulateFinancing(input) {
 
     // Loop mensal (mês 1 em diante)
     for (let mes = 1; mes <= numParcelasConstrutora; mes++) {
+        const correcaoIncc = saldoDevedor * taxaIncc;
+        saldoDevedor += correcaoIncc;
+
         const parcelasRestantes = numParcelasConstrutora - (mes - 1);
         const parcelaAtual =
             parcelasRestantes > 0 ? saldoDevedor / parcelasRestantes : saldoDevedor;
@@ -58,7 +64,7 @@ function simulateFinancing(input) {
             "Despesas Mês 0": 0,
             "Parcela Imovel (Base)": parcelaAtual,
             "Parcela ITBI/Cartorio (Base)": 0,
-            "INCC (Correção Saldo)": 0,
+            "INCC (Correção Saldo)": correcaoIncc,
             "Parcela Construtora (Com INCC)": parcelaAtual,
             "Seguro de Obra": 0,
             Anuais: 0,
