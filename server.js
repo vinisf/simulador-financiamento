@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const { simulateFinancing } = require("./src/simulate");
 
 const app = express();
 const PORT = 3000;
@@ -14,12 +15,8 @@ app.get("/health", (req, res) => {
 });
 
 app.post("/api/v1/simulations", (req, res) => {
-  res.json({
-    resumo_final: {
-      cenario_escolhido: req.body.cenarioEscolha || "investir"
-    },
-    detalhes_mes_a_mes: []
-  });
+  const result = simulateFinancing(req.body);
+  res.json(result);
 });
 
 app.listen(PORT, () => {
