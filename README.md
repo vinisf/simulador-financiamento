@@ -1,3 +1,11 @@
+## 🚀 Demo
 
-* **Demo:** https://simulador-financiamento.onrender.com/
-* **API:** `https://simulador-financiamento.onrender.com/api/v1/simulation`
+https://simulador-financiamento-y2fi.onrender.com
+
+## ❤️ Healthcheck
+
+GET /health
+
+## 📡 API
+
+POST /api/v1/simulations
