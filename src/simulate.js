@@ -7,6 +7,19 @@
  * @param {import("./domain/types").FinancingInput} input
  */
 function simulateFinancing(input) {
+    const valorAnuais = Number(input.valorAnuais) || 0;
+
+    // meses anuais podem vir como array ou string "12,24"
+    let mesesAnuais = [];
+    if (Array.isArray(input.mesesAnuais)) {
+        mesesAnuais = input.mesesAnuais.map(Number);
+    } else if (typeof input.mesesAnuais === "string") {
+        mesesAnuais = input.mesesAnuais
+            .split(",")
+            .map((m) => Number(m.trim()))
+            .filter((m) => Number.isFinite(m));
+    }
+
     const valorAtoOriginal = Number(input.valorAto) || 0;
     const valorInvestimentoInicial =
         Number(input.valorInvestimentoInicial) || 0;
@@ -46,6 +59,8 @@ function simulateFinancing(input) {
     let totalSeguroObra = 0;
     let totalCaixa = 0;
     let totalCondominio = 0;
+    let totalAnuais = 0;
+
 
     let totalSacadoInvestimento = 0;
     let totalRendimentoInvestimento = 0;
@@ -114,11 +129,19 @@ function simulateFinancing(input) {
             rendimentoMes = saldoInvestimento * taxaRendimentoMensal;
             saldoInvestimento += rendimentoMes;
         }
+        let anualMes = 0;
+
+        if (valorAnuais > 0 && mesesAnuais.includes(mes)) {
+            anualMes = valorAnuais;
+        }
+
         const totalMes =
             parcelaAtual +
             seguroObraMes +
             parcelaCaixaMes +
-            condominioMes;
+            condominioMes +
+            anualMes;
+
         let valorSacado = 0;
 
         if (cenarioEscolha === "investir" && saldoInvestimento > 0) {
@@ -131,6 +154,8 @@ function simulateFinancing(input) {
         totalSeguroObra += seguroObraMes;
         totalCaixa += parcelaCaixaMes;
         totalCondominio += condominioMes;
+        totalAnuais += anualMes;
+
 
         totalSacadoInvestimento += valorSacado;
         totalRendimentoInvestimento += rendimentoMes;
@@ -144,7 +169,7 @@ function simulateFinancing(input) {
             "INCC (Correção Saldo)": correcaoIncc,
             "Parcela Construtora (Com INCC)": parcelaAtual,
             "Seguro de Obra": seguroObraMes,
-            Anuais: 0,
+            Anuais: anualMes,
             Chave: 0,
             "Parcela Caixa": parcelaCaixaMes,
             Condominio: condominioMes,
@@ -159,6 +184,7 @@ function simulateFinancing(input) {
                 cenarioEscolha === "investir" && valorSacado > 0
                     ? "Despesas cobertas com investimento"
                     : "Pós-obra (Construtora + Caixa + Condomínio)"
+
         });
     }
 
