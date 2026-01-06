@@ -12,8 +12,6 @@ function simulateFinancing(input) {
         Number(input.valorInvestimentoInicial) || 0;
 
     const cenarioEscolha = input.cenarioEscolha || "investir";
-
-
     // taxa fixa inicial (depois pode virar configurável)
     const taxaRendimentoMensal = 0.009; // 0.9% a.m.
 
@@ -42,6 +40,16 @@ function simulateFinancing(input) {
 
 
     const detalhes = [];
+
+    let totalPagoConstrutora = 0;
+    let totalInccPago = 0;
+    let totalSeguroObra = 0;
+    let totalCaixa = 0;
+    let totalCondominio = 0;
+
+    let totalSacadoInvestimento = 0;
+    let totalRendimentoInvestimento = 0;
+
 
     // Mês 0
     detalhes.push({
@@ -117,6 +125,16 @@ function simulateFinancing(input) {
             valorSacado = Math.min(saldoInvestimento, totalMes);
             saldoInvestimento -= valorSacado;
         }
+        // acumuladores
+        totalPagoConstrutora += parcelaAtual;
+        totalInccPago += correcaoIncc;
+        totalSeguroObra += seguroObraMes;
+        totalCaixa += parcelaCaixaMes;
+        totalCondominio += condominioMes;
+
+        totalSacadoInvestimento += valorSacado;
+        totalRendimentoInvestimento += rendimentoMes;
+
 
         detalhes.push({
             Mes: mes,
