@@ -7,10 +7,12 @@
  * @param {import("./domain/types").FinancingInput} input
  */
 function simulateFinancing(input) {
+    const valorAtoOriginal = Number(input.valorAto) || 0;
     const valorInvestimentoInicial =
         Number(input.valorInvestimentoInicial) || 0;
 
     const cenarioEscolha = input.cenarioEscolha || "investir";
+
 
     // taxa fixa inicial (depois pode virar configurável)
     const taxaRendimentoMensal = 0.009; // 0.9% a.m.
@@ -19,7 +21,10 @@ function simulateFinancing(input) {
 
     const precoVenda = Number(input.precoVenda) || 0;
     const financiamentoSubsidio = Number(input.financiamentoSubsidio) || 0;
-    const valorAto = Number(input.valorAto) || 0;
+    const valorAto =
+        cenarioEscolha === "ato"
+            ? valorAtoOriginal + valorInvestimentoInicial
+            : valorAtoOriginal;
     const aberturaConta = Number(input.aberturaConta) || 0;
     const numParcelasConstrutora = Number(input.numParcelasConstrutora) || 0;
     const taxaInccMensal = Number(input.taxaInccMensalPercentual) || 0;
@@ -34,6 +39,7 @@ function simulateFinancing(input) {
 
     const entradaCalculada = precoVenda - financiamentoSubsidio;
     const saldoBaseImovel = entradaCalculada - valorAto;
+
 
     const detalhes = [];
 
@@ -55,7 +61,10 @@ function simulateFinancing(input) {
         "Rendimento Investimento": 0,
         "Valor Sacado Investimento": 0,
         "Valor Investimento Depois": 0,
-        Observacao: "Despesas iniciais (ATO + Abertura de Conta)"
+        Observacao:
+            cenarioEscolha === "ato"
+                ? "ATO com uso do investimento como entrada"
+                : "Despesas iniciais (ATO + Abertura de Conta)"
     });
 
     // Parcela fixa da construtora (versão simples)
@@ -65,6 +74,7 @@ function simulateFinancing(input) {
     let saldoDevedor = saldoBaseImovel;
     let saldoInvestimento =
         cenarioEscolha === "investir" ? valorInvestimentoInicial : 0;
+
 
 
     // Loop mensal (mês 1 em diante)
