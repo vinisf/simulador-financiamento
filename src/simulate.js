@@ -7,6 +7,14 @@
  * @param {import("./domain/types").FinancingInput} input
  */
 function simulateFinancing(input) {
+    const valorInvestimentoInicial =
+        Number(input.valorInvestimentoInicial) || 0;
+
+    const cenarioEscolha = input.cenarioEscolha || "investir";
+
+    // taxa fixa inicial (depois pode virar configurável)
+    const taxaRendimentoMensal = 0.009; // 0.9% a.m.
+
     const taxaCondominioMensal = Number(input.taxaCondominioMensal) || 0;
 
     const precoVenda = Number(input.precoVenda) || 0;
@@ -55,6 +63,9 @@ function simulateFinancing(input) {
         numParcelasConstrutora > 0 ? saldoBaseImovel / numParcelasConstrutora : 0;
 
     let saldoDevedor = saldoBaseImovel;
+    let saldoInvestimento =
+        cenarioEscolha === "investir" ? valorInvestimentoInicial : 0;
+
 
     // Loop mensal (mês 1 em diante)
     for (let mes = 1; mes <= numParcelasConstrutora; mes++) {
@@ -78,6 +89,13 @@ function simulateFinancing(input) {
             parcelaCaixaMes = parcelaCaixaBase;
             condominioMes = taxaCondominioMensal;
         }
+        let investimentoAntes = saldoInvestimento;
+        let rendimentoMes = 0;
+
+        if (cenarioEscolha === "investir" && saldoInvestimento > 0) {
+            rendimentoMes = saldoInvestimento * taxaRendimentoMensal;
+            saldoInvestimento += rendimentoMes;
+        }
 
         detalhes.push({
             Mes: mes,
@@ -92,10 +110,11 @@ function simulateFinancing(input) {
             "Parcela Caixa": parcelaCaixaMes,
             Condominio: condominioMes,
             "Total Mes": parcelaAtual + seguroObraMes + parcelaCaixaMes + condominioMes,
-            "Valor Investimento Antes": 0,
-            "Rendimento Investimento": 0,
+            "Valor Investimento Antes": investimentoAntes,
+            "Rendimento Investimento": rendimentoMes,
             "Valor Sacado Investimento": 0,
-            "Valor Investimento Depois": 0,
+            "Valor Investimento Depois": saldoInvestimento,
+
             Observacao:
                 mes <= mesesSeguroObra
                     ? "Obra (Construtora + INCC + Seguro)"
