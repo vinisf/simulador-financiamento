@@ -96,6 +96,17 @@ function simulateFinancing(input) {
             rendimentoMes = saldoInvestimento * taxaRendimentoMensal;
             saldoInvestimento += rendimentoMes;
         }
+        const totalMes =
+            parcelaAtual +
+            seguroObraMes +
+            parcelaCaixaMes +
+            condominioMes;
+        let valorSacado = 0;
+
+        if (cenarioEscolha === "investir" && saldoInvestimento > 0) {
+            valorSacado = Math.min(saldoInvestimento, totalMes);
+            saldoInvestimento -= valorSacado;
+        }
 
         detalhes.push({
             Mes: mes,
@@ -109,15 +120,16 @@ function simulateFinancing(input) {
             Chave: 0,
             "Parcela Caixa": parcelaCaixaMes,
             Condominio: condominioMes,
-            "Total Mes": parcelaAtual + seguroObraMes + parcelaCaixaMes + condominioMes,
+            "Total Mes": totalMes,
             "Valor Investimento Antes": investimentoAntes,
             "Rendimento Investimento": rendimentoMes,
-            "Valor Sacado Investimento": 0,
+            "Valor Sacado Investimento": valorSacado,
             "Valor Investimento Depois": saldoInvestimento,
 
+
             Observacao:
-                mes <= mesesSeguroObra
-                    ? "Obra (Construtora + INCC + Seguro)"
+                cenarioEscolha === "investir" && valorSacado > 0
+                    ? "Despesas cobertas com investimento"
                     : "Pós-obra (Construtora + Caixa + Condomínio)"
         });
     }
