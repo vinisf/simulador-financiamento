@@ -7,6 +7,9 @@
  * @param {import("./domain/types").FinancingInput} input
  */
 function simulateFinancing(input) {
+    const valorChave = Number(input.valorChave) || 0;
+    const mesChave = Number(input.mesChave) || 0;
+
     const valorAnuais = Number(input.valorAnuais) || 0;
 
     // meses anuais podem vir como array ou string "12,24"
@@ -134,13 +137,20 @@ function simulateFinancing(input) {
         if (valorAnuais > 0 && mesesAnuais.includes(mes)) {
             anualMes = valorAnuais;
         }
+        let chaveMes = 0;
+
+        if (valorChave > 0 && mesChave === mes) {
+            chaveMes = valorChave;
+        }
 
         const totalMes =
             parcelaAtual +
             seguroObraMes +
             parcelaCaixaMes +
             condominioMes +
-            anualMes;
+            anualMes +
+            chaveMes;
+
 
         let valorSacado = 0;
 
@@ -170,7 +180,7 @@ function simulateFinancing(input) {
             "Parcela Construtora (Com INCC)": parcelaAtual,
             "Seguro de Obra": seguroObraMes,
             Anuais: anualMes,
-            Chave: 0,
+            Chave: chaveMes,
             "Parcela Caixa": parcelaCaixaMes,
             Condominio: condominioMes,
             "Total Mes": totalMes,
