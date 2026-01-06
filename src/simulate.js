@@ -165,13 +165,25 @@ function simulateFinancing(input) {
 
     return {
         resumo_final: {
+            cenario_escolhido: cenarioEscolha,
+
             entrada_calculada: entradaCalculada,
             saldo_base_imovel: saldoBaseImovel,
             total_financiado: financiamentoSubsidio,
-            total_meses_simulados: detalhes.length - 1,
-            cenario_escolhido: input.cenarioEscolha || "investir"
-        },
-        detalhes_mes_a_mes: detalhes
+
+            total_pago_construtora: totalPagoConstrutora,
+            total_incc_pago: totalInccPago,
+            total_seguro_obra: totalSeguroObra,
+            total_pago_caixa: totalCaixa,
+            total_condominio: totalCondominio,
+
+            total_investimento_sacado: totalSacadoInvestimento,
+            total_rendimento_investimento: totalRendimentoInvestimento,
+            saldo_final_investimento: saldoInvestimento,
+
+            total_meses_simulados: detalhes.length - 1
+        }
+
     };
 }
 
