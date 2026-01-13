@@ -174,7 +174,7 @@ function simulateFinancing(input) {
         detalhes.push({
             Mes: mes,
             "Despesas Mês 0": 0,
-            "Parcela Imovel (Base)": parcelaAtual,
+            "Parcela Imovel (Base)": parcelaConstrutoraBase,
             "Parcela ITBI/Cartorio (Base)": 0,
             "INCC (Correção Saldo)": correcaoIncc,
             "Parcela Construtora (Com INCC)": parcelaAtual,
